@@ -1,10 +1,10 @@
-﻿using MediatR;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OrderOperations.Application.Repositories;
 using OrderOperations.Persistence.Context;
-using OrderOperations.Persistence.Identity;
 using OrderOperations.Persistence.Repositories;
+using OrderPoerations.Domain.Entities;
 
 namespace OrderOperations.Persistence;
 
@@ -21,10 +21,7 @@ public static class ServicesRegistrations
             options.UseNpgsql(connectionString);
         });
 
-        collection
-            .AddIdentityCore<ApplicationUser>() // Updated to use AddIdentityCore with only ApplicationUser  
-            .AddRoles<ApplicationRole>() // Added this to include ApplicationRole  
-            .AddEntityFrameworkStores<AppDbContext>(); // Added this to configure EF stores  
+        collection.AddIdentity<Person, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
         collection.AddScoped<IBasketRepository, BasketRepository>();
         collection.AddScoped<ICategoryRepository, CategoryRepository>();

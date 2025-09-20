@@ -1,13 +1,30 @@
+using Microsoft.AspNetCore.Localization;
 using OrderOperations.Application;
 using OrderOperations.Persistence;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
+{
+    var supportedCultures = new[] { "en", "tr" }; // Add more cultures as needed
+    options.DefaultRequestCulture = new RequestCulture("tr");
+    options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
+    options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
+
+    // Set the culture based on the URL segment
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+        {
+            new AcceptLanguageHeaderRequestCultureProvider()
+        };
+});
 
 // Add services to the container.
 var dbConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
 
 builder.Services
-    .AddApplicationServices()
+    .AddApplicationServices(builder.Configuration)
     .AddPersistenceServices(dbConnectionString);
 
 

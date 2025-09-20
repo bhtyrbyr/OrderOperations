@@ -5,5 +5,5 @@ namespace OrderPoerations.Domain.Entities;
 public class Basket : BaseAuditableEntity<Guid, Guid>
 {
     public Guid UserId { get; set; }
-    public List<Product> BasketItems { get; set; } = new();
+    public ICollection<Product> BasketItems { get; set; }
 }

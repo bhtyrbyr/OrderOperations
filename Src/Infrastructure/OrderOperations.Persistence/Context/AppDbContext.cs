@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using OrderOperations.Persistence.Identity;
 using OrderPoerations.Domain.Entities;
 
 namespace OrderOperations.Persistence.Context;
 
-public class AppDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, Guid>
+public class AppDbContext : IdentityDbContext<Person, IdentityRole, string>
 {
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {

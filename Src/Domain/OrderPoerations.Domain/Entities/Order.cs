@@ -6,6 +6,6 @@ namespace OrderPoerations.Domain.Entities;
 public class Order : BaseAuditableEntity<Guid, Guid>
 {
     public Guid PersonId { get; set; }
-    public List<OrderItem> OrderItems { get; set; }
+    public ICollection<OrderItem> OrderItems { get; set; }
     public OrderStatusEnum Status { get; set; }
 }

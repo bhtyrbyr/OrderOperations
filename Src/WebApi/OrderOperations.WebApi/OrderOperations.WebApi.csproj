@@ -20,10 +20,6 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
-
 	<ItemGroup>
 		<ProjectReference Include="..\..\Application\OrderOperations.Application\OrderOperations.Application.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Messaging\OrderOperations.Messaging.csproj" />
@@ -31,6 +27,22 @@
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Security\OrderOperations.Security.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Services\OrderOperations.Services.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.SignalR\OrderOperations.SignalR.csproj" />
+		<ProjectReference Include="..\..\Shared\OrderOperations.CustomExceptions\OrderOperations.CustomExceptions.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Languages\Lang.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Lang.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Languages\Lang.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Lang.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	</ItemGroup>
 
 

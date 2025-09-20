@@ -13,6 +13,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\Application\OrderOperations.Application\OrderOperations.Application.csproj" />
 		<ProjectReference Include="..\..\Domain\OrderPoerations.Domain\OrderPoerations.Domain.csproj" />
+		<ProjectReference Include="..\..\Shared\OrderOperations.CustomExceptions\OrderOperations.CustomExceptions.csproj" />
 	</ItemGroup>
 
 
