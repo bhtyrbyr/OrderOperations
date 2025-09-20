@@ -1,0 +1,68 @@
+﻿services:
+
+# application services - start
+  order-operations-api-dev:
+    build:
+      context: ./
+      dockerfile: Src/WebApi/OrderOperations.WebApi/Dockerfile
+    container_name: order-operations-api
+    depends_on:
+      postgre-dev:
+        condition: service_healthy
+    environment:
+      - ASPNETCORE_ENVIRONMENT=dev-docker
+    ports:
+      - "8081:8080"
+    networks:
+      - order-operations-network-dev
+# application services - end
+ 
+# default images - start    
+  rabbitmq-dev:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-dev
+    ports:
+      - "5673:5672"   # AMQP
+      - "15673:15672" # UI
+    volumes:
+      - rqdata:/var/lib/rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: order-op-dev
+      RABBITMQ_DEFAULT_PASS: order-op-dev*
+      RABBITMQ_DEFAULT_VHOST: /
+    networks:
+      - order-operations-network-dev
+
+  postgre-dev:
+    image: postgres:15.3
+    container_name: postgre-dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: order-op-dev
+      POSTGRES_PASSWORD: order-op-dev*
+      POSTGRES_DB: order-op-dev-db
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - order-operations-network-dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev_mng_db_user_dev -d dev_mng_db-dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+# default images - end
+
+# volumes - start
+volumes:
+  pgdata:
+  rqdata:
+# volumes - end
+
+# networks - start
+networks:
+  order-operations-network-dev:
+    driver: bridge
+#networks - end
+
