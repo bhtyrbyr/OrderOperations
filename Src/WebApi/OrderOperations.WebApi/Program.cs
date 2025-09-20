@@ -1,6 +1,15 @@
+using OrderOperations.Application;
+using OrderOperations.Persistence;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+var dbConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
+
+builder.Services
+    .AddApplicationServices()
+    .AddPersistenceServices(dbConnectionString);
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
