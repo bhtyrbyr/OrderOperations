@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5b794bd9-3b82-4884-a89c-cae31db9d5be</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.20" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="9.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.22.1" />
+    <PackageReference Include="Serilog.AspNetCore" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Application\OrderOperations.Application\OrderOperations.Application.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Messaging\OrderOperations.Messaging.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Persistence\OrderOperations.Persistence.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Security\OrderOperations.Security.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Services\OrderOperations.Services.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\OrderOperations.SignalR\OrderOperations.SignalR.csproj" />
+	</ItemGroup>
+
+
+</Project>
