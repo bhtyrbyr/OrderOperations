@@ -3,7 +3,7 @@ using OrderOperations.Application.DTOs.AuthorizationDTOs;
 using OrderOperations.Application.TokenOperations;
 using OrderOperations.CustomExceptions.Exceptions.AuthExceptions;
 
-namespace OrderOperations.Application.Features.Authorization.Commands;
+namespace OrderOperations.Application.Features.AuthorizationFeatures.Commands;
 
 public record LoginUserCommand(LoginUserViewModel Model) : IRequest<LoginResponseViewModel>;
 public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, LoginResponseViewModel>

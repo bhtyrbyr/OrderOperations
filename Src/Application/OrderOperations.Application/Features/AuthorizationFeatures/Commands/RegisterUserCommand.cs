@@ -6,7 +6,7 @@ using OrderOperations.CustomExceptions.Exceptions.AuthExceptions;
 using OrderPoerations.Domain.Entities;
 using System;
 
-namespace OrderOperations.Application.Features.Authorization.Commands;
+namespace OrderOperations.Application.Features.AuthorizationFeatures.Commands;
 
 public record RegisterUserCommand(RegisterUserViewModel Model) : IRequest<string>;
 public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, string>

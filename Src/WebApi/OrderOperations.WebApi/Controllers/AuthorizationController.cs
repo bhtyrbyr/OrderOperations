@@ -3,7 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using OrderOperations.Application.DTOs.AuthorizationDTOs;
-using OrderOperations.Application.Features.Authorization.Commands;
+using OrderOperations.Application.Features.AuthorizationFeatures.Commands;
 using OrderOperations.Application.Validator.Authorization;
 using OrderOperations.CustomExceptions.Exceptions.APIExceltions;
 using OrderOperations.WebApi.DTOs;
