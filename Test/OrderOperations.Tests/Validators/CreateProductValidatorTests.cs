@@ -20,7 +20,7 @@ namespace OrderOperations.UnitTests.Validators
             {
                 Name = "",
                 Description = "Description",
-                CategoryId = Guid.NewGuid(),
+                CategoryId = 1,
                 Price = 10.0
             };
 
@@ -36,7 +36,7 @@ namespace OrderOperations.UnitTests.Validators
             {
                 Name = "Valid Product",
                 Description = "Valid Description",
-                CategoryId = Guid.NewGuid(),
+                CategoryId = 1,
                 Price = 20.0
             };
 

@@ -8,4 +8,5 @@ public class Product : BaseAuditableEntity<Guid, Guid>
     public string Description { get; set; }
     public Category Category { get; set; }
     public double Price { get; set; }
+    public Stock Stock { get; set; }
 }

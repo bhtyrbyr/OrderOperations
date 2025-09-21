@@ -391,6 +391,9 @@ namespace OrderOperations.Persistence.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("double precision");
 
+                    b.Property<long>("StockId")
+                        .HasColumnType("bigint");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -402,6 +405,8 @@ namespace OrderOperations.Persistence.Migrations
                     b.HasIndex("BasketId");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("StockId");
 
                     b.ToTable("Products");
                 });
@@ -426,9 +431,6 @@ namespace OrderOperations.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
 
@@ -436,8 +438,6 @@ namespace OrderOperations.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
 
                     b.ToTable("Stocks");
                 });
@@ -522,18 +522,15 @@ namespace OrderOperations.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("OrderPoerations.Domain.Entities.Stock", b =>
-                {
-                    b.HasOne("OrderPoerations.Domain.Entities.Product", "Product")
+                    b.HasOne("OrderPoerations.Domain.Entities.Stock", "Stock")
                         .WithMany()
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("StockId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Product");
+                    b.Navigation("Category");
+
+                    b.Navigation("Stock");
                 });
 
             modelBuilder.Entity("OrderPoerations.Domain.Entities.Basket", b =>

@@ -7,4 +7,5 @@ public class ProductViewModel
     public string Description { get; set; }
     public string CategoryName { get; set; }
     public double Price { get; set; }
+    public double AvailableStock { get; set; }
 }

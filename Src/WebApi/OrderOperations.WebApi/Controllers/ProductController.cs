@@ -149,4 +149,39 @@ public class ProductController : ControllerBase
         );
         return Ok(response);
     }
+
+    [HttpPost("{productId:guid}/add-stock")]
+    [Authorize(Roles = "Admin")]
+    public async Task<IActionResult> AddStock(Guid productId, [FromBody] double quantity)
+    {
+        if (quantity <= 0)
+        {
+            return BadRequest(new ResponseDTO(
+                _localizer["errorMsg"].Value,
+                _localizer["quantityMustBeGreaterThanZeroMsg"].Value,
+                null
+            ));
+        }
+
+        var model = new ProductStockUpdateViewModel
+        {
+            ProductId = productId,
+            Quantity = quantity
+        };
+
+        var result = await _mediatr.Send(new AddStockToProductCommand(model));
+
+        if (!result)
+        {
+            throw new OperationFailException("operationFailedMsg");
+        }
+
+        var response = new ResponseDTO(
+            _localizer["successMsg"].Value,
+            _localizer["productStockAddedMsg"].Value,
+            new { ProductId = productId, AddedQuantity = quantity }
+        );
+
+        return Ok(response);
+    }
 }

@@ -33,20 +33,6 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
         product.Category = category is null ? null : category;
 
         await _productRepository.CreateAsync(product);
-
-        var stockCode = new Stock()
-        {
-            CreatedAt = DateTime.UtcNow,
-            UpdatedAt = DateTime.UtcNow,
-            CreatedBy = Guid.Empty,
-            UpdatedBy = Guid.Empty,
-            Product = product,
-            Amount = 0,
-            IsActive = true
-        };
-
-        await _stockRepository.CreateAsync(stockCode);
-
         return product.Id;
     }
 }

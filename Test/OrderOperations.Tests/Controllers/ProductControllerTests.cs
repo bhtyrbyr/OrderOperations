@@ -118,7 +118,7 @@ public class ProductControllerTests
         {
             Name = "New Product",
             Description = "Product description",
-            CategoryId = Guid.NewGuid(),
+            CategoryId = 1,
             Price = 50.0
         };
 
