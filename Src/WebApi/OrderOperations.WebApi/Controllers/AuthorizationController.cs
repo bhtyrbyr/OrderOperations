@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Localization;
 using OrderOperations.Application.DTOs.AuthorizationDTOs;
@@ -9,13 +8,11 @@ using OrderOperations.Application.Validator.Authorization;
 using OrderOperations.CustomExceptions.Exceptions.APIExceltions;
 using OrderOperations.WebApi.DTOs;
 using OrderOperations.WebApi.Languages;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace OrderOperations.WebApi.Controllers;
 
 [ApiController]
 [Route("api/auth")]
-//[SwaggerTag("Authentication & Roles")]
 public class AuthorizationController : ControllerBase
 {
     private readonly IStringLocalizer<Lang> _localizer;
@@ -56,7 +53,7 @@ public class AuthorizationController : ControllerBase
             throw new OperationFailException("operationFailedMsg");
         }
 
-        var response = new ResponseDTO(_localizer["successMsg"].Value, _localizer["registrationSuccessMsg"].Value, result);
+        var response = new ResponseDTO(_localizer["successMsg"].Value, _localizer["loginSuccessMsg"].Value, result);
         return Ok(response);
     }
 }

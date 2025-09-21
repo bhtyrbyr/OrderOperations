@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Localization;
 using OrderOperations.Application;
 using OrderOperations.Persistence;
+using OrderOperations.WebApi.Middlewares;
+using OrderOperations.WebApi.Services;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<ILoggerService, ConsoleLogger>();
 builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
 builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
@@ -28,10 +31,21 @@ builder.Services
     .AddPersistenceServices(dbConnectionString);
 
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("AllCors", opts =>
+    {
+        opts.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
 var app = builder.Build();
 
@@ -42,9 +56,17 @@ app.UseSwagger();
 app.UseSwaggerUI();
 //}
 
+app.UseCors("AllCors");
+
+app.UseRequestLocalization();
+
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
 app.UseAuthorization();
+
+app.UseCustomExceptionMiddle();
 
 app.MapControllers();
 
