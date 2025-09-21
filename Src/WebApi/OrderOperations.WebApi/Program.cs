@@ -5,69 +5,87 @@ using OrderOperations.WebApi.Middlewares;
 using OrderOperations.WebApi.Services;
 using System.Globalization;
 
-var builder = WebApplication.CreateBuilder(args);
-
-builder.Services.AddSingleton<ILoggerService, ConsoleLogger>();
-builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-builder.Services.Configure<RequestLocalizationOptions>(options =>
+public partial class Program
 {
-    var supportedCultures = new[] { "en", "tr" }; // Add more cultures as needed
-    options.DefaultRequestCulture = new RequestCulture("tr");
-    options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
-    options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
-
-    // Set the culture based on the URL segment
-    options.RequestCultureProviders = new List<IRequestCultureProvider>
-        {
-            new AcceptLanguageHeaderRequestCultureProvider()
-        };
-});
-
-// Add services to the container.
-var dbConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
-
-builder.Services
-    .AddApplicationServices(builder.Configuration)
-    .AddPersistenceServices(dbConnectionString);
-
-
-builder.Services.AddControllers().AddNewtonsoftJson();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy("AllCors", opts =>
+    private static void Main(string[] args)
     {
-        opts.AllowAnyOrigin()
-        .AllowAnyHeader()
-        .AllowAnyMethod();
-    });
-});
+        var builder = WebApplication.CreateBuilder(args);
 
-var app = builder.Build();
+        builder.Services.AddSingleton<ILoggerService, ConsoleLogger>();
+        builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
+        {
+            var supportedCultures = new[] { "en", "tr" }; // Add more cultures as needed
+            options.DefaultRequestCulture = new RequestCulture("tr");
+            options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
+            options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
-app.UseSwagger();
-app.UseSwaggerUI();
-//}
+            // Set the culture based on the URL segment
+            options.RequestCultureProviders = new List<IRequestCultureProvider>
+                {
+            new AcceptLanguageHeaderRequestCultureProvider()
+                };
+        });
 
-app.UseCors("AllCors");
+        // Add services to the container.
+        var dbConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
 
-app.UseRequestLocalization();
+        builder.Services
+            .AddApplicationServices(builder.Configuration)
+            .AddPersistenceServices(dbConnectionString);
 
-app.UseHttpsRedirection();
 
-app.UseAuthentication();
+        builder.Services.AddControllers().AddNewtonsoftJson();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
 
-app.UseAuthorization();
 
-app.UseCustomExceptionMiddle();
+        builder.Services.ConfigureApplicationCookie(options =>
+        {
+            options.Cookie.HttpOnly = true;
+            options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+            options.SlidingExpiration = false;
+            options.Events.OnRedirectToLogin = context =>
+            {
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            };
+        });
 
-app.MapControllers();
+        builder.Services.AddCors(opt =>
+        {
+            opt.AddPolicy("AllCors", opts =>
+            {
+                opts.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+            });
+        });
 
-app.Run();
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        //if (app.Environment.IsDevelopment())
+        //{
+        app.UseSwagger();
+        app.UseSwaggerUI();
+        //}
+
+        app.UseCors("AllCors");
+
+        app.UseRequestLocalization();
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthentication();
+
+        app.UseAuthorization();
+
+        app.UseCustomExceptionMiddle();
+
+        app.MapControllers();
+
+        app.Run();
+    }
+}

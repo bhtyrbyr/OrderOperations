@@ -8,7 +8,7 @@
         "ASPNETCORE_ENVIRONMENT": "prodelopment"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5231"
+      "applicationUrl": "http://localhost:5000"
     },
     "https": {
       "commandName": "Project",
@@ -18,7 +18,7 @@
         "ASPNETCORE_ENVIRONMENT": "prodelopment"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7257;http://localhost:5231"
+      "applicationUrl": "https://localhost:7000;http://localhost:5000"
     },
     "IIS Express": {
       "commandName": "IISExpress",
