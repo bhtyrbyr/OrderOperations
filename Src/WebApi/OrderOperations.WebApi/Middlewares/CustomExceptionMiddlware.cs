@@ -63,9 +63,9 @@ public class CustomExceptionMiddlware
         {
             watch.Stop();
             var msg = $"{_localizer[ex.Message].Value}";
-            msg += $"{(!string.IsNullOrEmpty(ex._param1) ? "&-&" + (_localizer[ex._param1.Split("*")[0]] + ex._param1.Split("*")[1]) : "")}";
-            msg += $"{(!string.IsNullOrEmpty(ex._param2) ? "&-&" + (_localizer[ex._param2.Split("*")[0]] + ex._param2.Split("*")[1]) : "")}";
-            msg += $"{(!string.IsNullOrEmpty(ex._param3) ? "&-&" + (_localizer[ex._param3.Split("*")[0]] + ex._param3.Split("*")[1].Replace("\r\n", "-")) : "")}";
+            msg += $"{(!string.IsNullOrEmpty(ex._param1) ? "&-&" + _localizer[ex._param1] : "")}";
+            msg += $"{(!string.IsNullOrEmpty(ex._param2) ? "&-&" + _localizer[ex._param2] : "")}";
+            msg += $"{(!string.IsNullOrEmpty(ex._param3) ? "&-&" + _localizer[ex._param3] : "")}";
             await HandleExceptionAsync(context, ex._statusCode, msg, ex.GetType().Name, watch);
         }
         catch (Exception ex)

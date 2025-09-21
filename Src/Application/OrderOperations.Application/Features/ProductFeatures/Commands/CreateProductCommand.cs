@@ -31,6 +31,7 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
         var category = await _categoryRepository.GetByIdAsync(request.Model.CategoryId);
 
         product.Category = category is null ? null : category;
+        product.Stock = new();
 
         await _productRepository.CreateAsync(product);
         return product.Id;

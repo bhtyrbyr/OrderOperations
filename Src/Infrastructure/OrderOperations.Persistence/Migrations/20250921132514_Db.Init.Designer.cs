@@ -12,7 +12,7 @@ using OrderOperations.Persistence.Context;
 namespace OrderOperations.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250921130333_Db.Init")]
+    [Migration("20250921132514_Db.Init")]
     partial class DbInit
     {
         /// <inheritdoc />
@@ -186,6 +186,50 @@ namespace OrderOperations.Persistence.Migrations
                     b.ToTable("Baskets");
                 });
 
+            modelBuilder.Entity("OrderPoerations.Domain.Entities.BasketItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<double>("Amount")
+                        .HasColumnType("double precision");
+
+                    b.Property<Guid?>("BasketId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("ProductId")
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("TotalCost")
+                        .HasColumnType("double precision");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BasketId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("BasketItems");
+                });
+
             modelBuilder.Entity("OrderPoerations.Domain.Entities.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -270,7 +314,7 @@ namespace OrderOperations.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("OrderId")
+                    b.Property<Guid?>("OrderId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("ProductId")
@@ -368,9 +412,6 @@ namespace OrderOperations.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BasketId")
-                        .HasColumnType("uuid");
-
                     b.Property<int>("CategoryId")
                         .HasColumnType("integer");
 
@@ -404,8 +445,6 @@ namespace OrderOperations.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BasketId");
 
                     b.HasIndex("CategoryId");
 
@@ -496,13 +535,26 @@ namespace OrderOperations.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("OrderPoerations.Domain.Entities.BasketItem", b =>
+                {
+                    b.HasOne("OrderPoerations.Domain.Entities.Basket", null)
+                        .WithMany("BasketItems")
+                        .HasForeignKey("BasketId");
+
+                    b.HasOne("OrderPoerations.Domain.Entities.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Product");
+                });
+
             modelBuilder.Entity("OrderPoerations.Domain.Entities.OrderItem", b =>
                 {
                     b.HasOne("OrderPoerations.Domain.Entities.Order", null)
                         .WithMany("OrderItems")
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("OrderPoerations.Domain.Entities.Product", "Product")
                         .WithMany()
@@ -515,10 +567,6 @@ namespace OrderOperations.Persistence.Migrations
 
             modelBuilder.Entity("OrderPoerations.Domain.Entities.Product", b =>
                 {
-                    b.HasOne("OrderPoerations.Domain.Entities.Basket", null)
-                        .WithMany("BasketItems")
-                        .HasForeignKey("BasketId");
-
                     b.HasOne("OrderPoerations.Domain.Entities.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")

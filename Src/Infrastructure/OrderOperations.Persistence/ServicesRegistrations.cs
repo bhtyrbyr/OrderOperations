@@ -24,6 +24,7 @@ public static class ServicesRegistrations
         collection.AddIdentity<Person, IdentityRole>().AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
 
         collection.AddScoped<IBasketRepository, BasketRepository>();
+        collection.AddScoped<IBasketItemRepository, BasketItemRepository>();
         collection.AddScoped<ICategoryRepository, CategoryRepository>();
         collection.AddScoped<IOrderRepository, OrderRepository>();
         collection.AddScoped<IOrderItemRepository, OrderItemRepository>();

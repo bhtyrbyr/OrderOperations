@@ -239,7 +239,6 @@ namespace OrderOperations.Persistence.Migrations
                     CategoryId = table.Column<int>(type: "integer", nullable: false),
                     Price = table.Column<double>(type: "double precision", nullable: false),
                     StockId = table.Column<long>(type: "bigint", nullable: false),
-                    BasketId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -249,11 +248,6 @@ namespace OrderOperations.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Products", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Products_Baskets_BasketId",
-                        column: x => x.BasketId,
-                        principalTable: "Baskets",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Products_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -269,15 +263,47 @@ namespace OrderOperations.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BasketItems",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ProductId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Amount = table.Column<double>(type: "double precision", nullable: false),
+                    TotalCost = table.Column<double>(type: "double precision", nullable: false),
+                    BasketId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BasketItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BasketItems_Baskets_BasketId",
+                        column: x => x.BasketId,
+                        principalTable: "Baskets",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_BasketItems_Products_ProductId",
+                        column: x => x.ProductId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     ProductId = table.Column<Guid>(type: "uuid", nullable: false),
                     Amount = table.Column<double>(type: "double precision", nullable: false),
                     TotalCost = table.Column<double>(type: "double precision", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: true),
                     CreatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
@@ -291,8 +317,7 @@ namespace OrderOperations.Persistence.Migrations
                         name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_OrderItems_Products_ProductId",
                         column: x => x.ProductId,
@@ -339,6 +364,16 @@ namespace OrderOperations.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_BasketItems_BasketId",
+                table: "BasketItems",
+                column: "BasketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BasketItems_ProductId",
+                table: "BasketItems",
+                column: "ProductId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -347,11 +382,6 @@ namespace OrderOperations.Persistence.Migrations
                 name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
                 column: "ProductId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Products_BasketId",
-                table: "Products",
-                column: "BasketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_CategoryId",
@@ -383,6 +413,9 @@ namespace OrderOperations.Persistence.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BasketItems");
+
+            migrationBuilder.DropTable(
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
@@ -392,13 +425,13 @@ namespace OrderOperations.Persistence.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
+                name: "Baskets");
+
+            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
                 name: "Products");
-
-            migrationBuilder.DropTable(
-                name: "Baskets");
 
             migrationBuilder.DropTable(
                 name: "Categories");
