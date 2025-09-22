@@ -105,10 +105,12 @@ public class OrderProcessingWorker : BackgroundService
                     TotalCost = item.TotalCost
                 };
                 order.OrderItems.Add(orderItem);
+                item.IsActive = false;
             }
 
             order.Status = OrderStatusEnum.Completed;
 
+            basket.IsActive = false;
 
             await dbContext.SaveChangesAsync(ct);
 

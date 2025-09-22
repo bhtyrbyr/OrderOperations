@@ -26,16 +26,17 @@ public class AddProductToBasketHandler : IRequestHandler<AddProductToBasketComma
 
     public async Task<bool> Handle(AddProductToBasketCommand request, CancellationToken cancellationToken)
     {
+        var stocks = await _stockRepository.GetAllAsync(cancellationToken);
+        var products = await _productRepository.GetAllAsync();
         var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
         var basket = await _basketRepository.GetByIdAsync(request.Model.BasketId, cancellationToken);
-        if (basket == null)
+        if (basket == null || basket.IsActive == false)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");
         }
 
-        var stocks = await _stockRepository.GetAllAsync(cancellationToken);
-        var product = await _productRepository.GetByIdAsync(request.Model.ProductId, cancellationToken);
-        if (product == null)
+        var product = products.Where(product => product.Id == request.Model.ProductId).FirstOrDefault();
+        if (product == null || product.IsActive == false)
         {
             throw new NotFoundException("productNotFoundMsg", param1: "modulNameMsg*ProductModule");
         }
@@ -47,7 +48,7 @@ public class AddProductToBasketHandler : IRequestHandler<AddProductToBasketComma
         }
 
         // Sepette bu ürün zaten var mı kontrol et
-        var existingItem = basket.BasketItems.FirstOrDefault(i => i.Product.Id == request.Model.ProductId);
+        var existingItem = basket.BasketItems.FirstOrDefault(i => i.Product.Id == request.Model.ProductId && i.IsActive);
 
         if (existingItem == null)
         {

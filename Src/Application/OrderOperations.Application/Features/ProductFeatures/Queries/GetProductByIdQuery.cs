@@ -22,7 +22,7 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Produc
     public async Task<ProductViewModel> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         var product = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
-        if (product == null)
+        if (product == null || !product.IsActive)
         {
             throw new NotFoundException("productNotFoundMsg", param1: "modulNameMsg*ProductModule");
         }

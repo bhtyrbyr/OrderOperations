@@ -8,11 +8,9 @@ public class BasketMappingProfile : Profile
 {
     public BasketMappingProfile()
     {
-        // Basket -> BasketViewModel
         CreateMap<Basket, BasketViewModel>()
             .ForMember(dest => dest.BasketItems, opt => opt.MapFrom(src => src.BasketItems));
 
-        // BasketItem -> BasketItemViewModel
         CreateMap<BasketItem, BasketItemViewModel>()
             .ForMember(dest => dest.BasketItemId, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.ProductId, opt => opt.MapFrom(src => src.Product.Id))

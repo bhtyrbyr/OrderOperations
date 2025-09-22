@@ -27,7 +27,6 @@
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Queue\OrderOperations.Queue.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Security\OrderOperations.Security.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Services\OrderOperations.Services.csproj" />
-		<ProjectReference Include="..\..\Infrastructure\OrderOperations.SignalR\OrderOperations.SignalR.csproj" />
 		<ProjectReference Include="..\..\Shared\OrderOperations.CustomExceptions\OrderOperations.CustomExceptions.csproj" />
 	</ItemGroup>
 

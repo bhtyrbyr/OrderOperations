@@ -35,10 +35,10 @@ public class CreateOrderFromBasketHandler : IRequestHandler<CreateOrderFromBaske
     {
         var basketItems = await _basketItemRepository.GetAllAsync();
         var basket = await _basketRepository.GetByIdAsync(request.BasketId);    
-        if (basket == null || basket.UserId != request.Person)
+        if (basket == null || basket.UserId != request.Person || basket.IsActive == false)
             throw new Exception("Basket not found");
 
-        if(basket.BasketItems == null || !basket.BasketItems.Any())
+        if(basket.BasketItems == null || !basket.BasketItems.Any(basketItems => basketItems.IsActive))
             throw new BusinessException("basketEmptyMsg", param1: basket.Id.ToString());
 
         var control = await _orderRepository.IsOrderExistByIdempotencyKeyAsync(request.Person, request.idempotencyKey);

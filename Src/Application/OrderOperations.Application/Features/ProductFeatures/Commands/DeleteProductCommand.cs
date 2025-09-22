@@ -9,14 +9,17 @@ public record DeleteProductCommand(Guid Id) : IRequest<bool>;
 public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, bool>
 {
     private readonly IProductRepository _productRepository;
+    private readonly IStockRepository _stockRepository;
 
-    public DeleteProductHandler(IProductRepository productRepository)
+    public DeleteProductHandler(IProductRepository productRepository, IStockRepository stockRepository)
     {
         _productRepository = productRepository;
+        _stockRepository = stockRepository;
     }
 
     public async Task<bool> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
     {
+        var stokRecords = await _stockRepository.GetAllAsync(cancellationToken);
         var existingProduct = await _productRepository.GetByIdAsync(request.Id, cancellationToken);
         if (existingProduct == null)
         {
@@ -24,6 +27,7 @@ public class DeleteProductHandler : IRequestHandler<DeleteProductCommand, bool>
         }
 
         _productRepository.Delete(existingProduct);
+        _stockRepository.Delete(existingProduct.Stock!);
         return true;
     }
 }

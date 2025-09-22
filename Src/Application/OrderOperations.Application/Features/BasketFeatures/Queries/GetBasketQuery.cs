@@ -25,7 +25,7 @@ public class GetBasketHandler : IRequestHandler<GetBasketQuery, BasketViewModel>
     {
         var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
         var basket = await _basketRepository.GetByIdAsync(request.BasketId, cancellationToken);
-        if (basket == null)
+        if (basket == null || basket.IsActive == false)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");
         }

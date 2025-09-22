@@ -21,7 +21,7 @@ public class AddStockToProductHandler : IRequestHandler<AddStockToProductCommand
     {
         // Ürünü bul
         var product = await _productRepository.GetByIdAsync(request.Model.ProductId, cancellationToken);
-        if (product == null)
+        if (product == null || !product.IsActive)
         {
             throw new NotFoundException("productNotFoundMsg", param1: "modulNameMsg*ProductModule");
         }

@@ -29,12 +29,12 @@ public class GetMyBasketQueryHandler : IRequestHandler<GetMyBasketQuery, List<Ba
         var products = await _productRepository.GetAllAsync(cancellationToken);
         var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
         var baskets = await _basketRepository.GetAllAsync(cancellationToken);
-        if (baskets == null)
+        if (baskets == null || !baskets.Any(basket => basket.IsActive == true))
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");
         }
         
-        var personBaskets = baskets.Where(basket => basket.UserId == request.Person).ToList();
+        var personBaskets = baskets.Where(basket => basket.UserId == request.Person && basket.IsActive).ToList();
         if (personBaskets == null)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");
