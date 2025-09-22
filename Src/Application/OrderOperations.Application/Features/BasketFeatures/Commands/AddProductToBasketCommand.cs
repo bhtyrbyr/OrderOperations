@@ -26,15 +26,15 @@ public class AddProductToBasketHandler : IRequestHandler<AddProductToBasketComma
 
     public async Task<bool> Handle(AddProductToBasketCommand request, CancellationToken cancellationToken)
     {
-        var basketItems = await _basketItemRepository.GetAllAsync();
-        var basket = await _basketRepository.GetByIdAsync(request.Model.BasketId);
+        var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
+        var basket = await _basketRepository.GetByIdAsync(request.Model.BasketId, cancellationToken);
         if (basket == null)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");
         }
 
-        var stocks = await _stockRepository.GetAllAsync();
-        var product = await _productRepository.GetByIdAsync(request.Model.ProductId);
+        var stocks = await _stockRepository.GetAllAsync(cancellationToken);
+        var product = await _productRepository.GetByIdAsync(request.Model.ProductId, cancellationToken);
         if (product == null)
         {
             throw new NotFoundException("productNotFoundMsg", param1: "modulNameMsg*ProductModule");

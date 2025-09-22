@@ -23,7 +23,7 @@ public class CreateBasketHandler : IRequestHandler<CreateBasketCommand, Guid>
             UserId = request.UserId
         };
 
-        await _basketRepository.CreateAsync(basket);
+        await _basketRepository.CreateAsync(basket, cancellationToken);
         return basket.Id;
     }
 }

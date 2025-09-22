@@ -21,7 +21,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, bool>
 
     public async Task<bool> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
-        var existingProduct = await _productRepository.GetByIdAsync(request.Model.Id);
+        var existingProduct = await _productRepository.GetByIdAsync(request.Model.Id, cancellationToken);
         if (existingProduct == null)
         {
             throw new NotFoundException("productNotFoundMsg", param1: "modulNameMsg*ProductModule");

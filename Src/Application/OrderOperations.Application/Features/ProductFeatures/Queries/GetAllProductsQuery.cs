@@ -24,9 +24,9 @@ public class GetAllProductsHandler : IRequestHandler<GetAllProductsQuery, List<P
 
     public async Task<List<ProductViewModel>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
     {
-        var stocks = await _stockRepository.GetAllAsync();  
-        var categories = await _categoryRepository.GetAllAsync();
-        var products = await _productRepository.GetAllAsync();
+        var stocks = await _stockRepository.GetAllAsync(cancellationToken);  
+        var categories = await _categoryRepository.GetAllAsync(cancellationToken);
+        var products = await _productRepository.GetAllAsync(cancellationToken);
         return _mapper.Map<List<ProductViewModel>>(products);
     }
 }

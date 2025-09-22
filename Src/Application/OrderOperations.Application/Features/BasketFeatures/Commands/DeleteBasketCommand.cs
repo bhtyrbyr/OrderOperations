@@ -19,8 +19,8 @@ public class DeleteBasketHandler : IRequestHandler<DeleteBasketCommand, bool>
 
     public async Task<bool> Handle(DeleteBasketCommand request, CancellationToken cancellationToken)
     {
-        var basketItems = await _basketItemRepository.GetAllAsync();
-        var basket = await _basketRepository.GetByIdAsync(request.BasketId);
+        var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
+        var basket = await _basketRepository.GetByIdAsync(request.BasketId, cancellationToken);
         if (basket == null)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");

@@ -24,9 +24,9 @@ public class RemoveProductFromBasketHandler : IRequestHandler<RemoveProductFromB
 
     public async Task<bool> Handle(RemoveProductFromBasketCommand request, CancellationToken cancellationToken)
     {
-        var products = await _productRepository.GetAllAsync();
-        var basketItems = await _basketItemRepository.GetAllAsync();
-        var basket = await _basketRepository.GetByIdAsync(request.Model.BasketId);
+        var products = await _productRepository.GetAllAsync(cancellationToken);
+        var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
+        var basket = await _basketRepository.GetByIdAsync(request.Model.BasketId, cancellationToken);
         if (basket == null)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");
@@ -39,7 +39,7 @@ public class RemoveProductFromBasketHandler : IRequestHandler<RemoveProductFromB
         }
 
         // Ürünün stok bilgisini geri ekle
-        var stocks = await _stockRepository.GetAllAsync();
+        var stocks = await _stockRepository.GetAllAsync(cancellationToken);
         var product = products.Where(product => product.Id == basketItem.Product.Id).First();
         if (product != null && product.Stock != null)
         {

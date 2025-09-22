@@ -20,10 +20,10 @@ public class GenericRepository<T, TIdType> : IGenericRepository<T, TIdType> wher
         return entity;
     }
 
-    public async Task<T> CreateAsync(T entity)
+    public async Task<T> CreateAsync(T entity, CancellationToken ct = default)
     {
-        await context.AddAsync(entity);
-        await context.SaveChangesAsync();
+        await context.AddAsync(entity, ct);
+        await context.SaveChangesAsync(ct);
         return entity;
     }
 
@@ -33,10 +33,10 @@ public class GenericRepository<T, TIdType> : IGenericRepository<T, TIdType> wher
         context.SaveChanges();
     }
 
-    public async Task CreateRangeAsync(List<T> entities)
+    public async Task CreateRangeAsync(List<T> entities, CancellationToken ct = default)
     {
-        await context.AddRangeAsync(entities);
-        await context.SaveChangesAsync();
+        await context.AddRangeAsync(entities, ct);
+        await context.SaveChangesAsync(ct);
     }
 
     public void Delete(T entity)
@@ -65,9 +65,9 @@ public class GenericRepository<T, TIdType> : IGenericRepository<T, TIdType> wher
         return context.Set<T>().ToList();
     }
 
-    public async Task<List<T>> GetAllAsync()
+    public async Task<List<T>> GetAllAsync(CancellationToken ct = default)
     {
-        return await context.Set<T>().ToListAsync();
+        return await context.Set<T>().ToListAsync(ct);
     }
 
     public T GetById(TIdType id)
@@ -77,10 +77,10 @@ public class GenericRepository<T, TIdType> : IGenericRepository<T, TIdType> wher
 #pragma warning restore CS8603 // Olası null başvuru dönüşü.
     }
 
-    public async Task<T> GetByIdAsync(TIdType id)
+    public async Task<T> GetByIdAsync(TIdType id, CancellationToken ct = default)
     {
 #pragma warning disable CS8603 // Olası null başvuru dönüşü.
-        return await context.Set<T>().FindAsync(id);
+        return await context.Set<T>().FindAsync(id, ct);
 #pragma warning restore CS8603 // Olası null başvuru dönüşü.
     }
 

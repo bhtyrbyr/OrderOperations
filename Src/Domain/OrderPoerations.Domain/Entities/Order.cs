@@ -11,4 +11,8 @@ public class Order : BaseAuditableEntity<Guid, Guid>
     public decimal TotalCost { get; set; }
     public string Fail { get; set; }
     public ICollection<OrderItem> OrderItems { get; set; }
+    public void MarkCreated() { Status = OrderStatusEnum.Created; /* Add DomainEvent */ }
+    public void MarkProcessing() { Status = OrderStatusEnum.Processing; }
+    public void MarkCompleted() { Status = OrderStatusEnum.Completed; }
+    public void MarkFailed(string reason) { Status = OrderStatusEnum.Failed; Fail = reason; }
 }

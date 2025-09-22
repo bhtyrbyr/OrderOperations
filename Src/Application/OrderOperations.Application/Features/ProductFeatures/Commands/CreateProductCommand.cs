@@ -28,12 +28,12 @@ public class CreateProductHandler : IRequestHandler<CreateProductCommand, Guid>
     {
         var product = _mapper.Map<Product>(request.Model);
 
-        var category = await _categoryRepository.GetByIdAsync(request.Model.CategoryId);
+        var category = await _categoryRepository.GetByIdAsync(request.Model.CategoryId, cancellationToken);
 
         product.Category = category is null ? null : category;
         product.Stock = new();
 
-        await _productRepository.CreateAsync(product);
+        await _productRepository.CreateAsync(product, cancellationToken);
         return product.Id;
     }
 }

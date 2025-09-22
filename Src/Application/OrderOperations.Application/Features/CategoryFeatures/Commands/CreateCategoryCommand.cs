@@ -22,7 +22,7 @@ public class CreateCategoryHandler : IRequestHandler<CreateCategoryCommand, int>
     public async Task<int> Handle(CreateCategoryCommand request, CancellationToken cancellationToken)
     {
         var category = _mapper.Map<Category>(request.Model);
-        await _categoryRepository.CreateAsync(category);
+        await _categoryRepository.CreateAsync(category, cancellationToken);
         return category.Id;
     }
 }

@@ -26,9 +26,9 @@ public class GetMyBasketQueryHandler : IRequestHandler<GetMyBasketQuery, List<Ba
 
     public async Task<List<BasketViewModel>> Handle(GetMyBasketQuery request, CancellationToken cancellationToken)
     {
-        var products = await _productRepository.GetAllAsync();
-        var basketItems = await _basketItemRepository.GetAllAsync();
-        var baskets = await _basketRepository.GetAllAsync();
+        var products = await _productRepository.GetAllAsync(cancellationToken);
+        var basketItems = await _basketItemRepository.GetAllAsync(cancellationToken);
+        var baskets = await _basketRepository.GetAllAsync(cancellationToken);
         if (baskets == null)
         {
             throw new NotFoundException("basketNotFoundMsg", param1: "modulNameMsg*BasketModule");

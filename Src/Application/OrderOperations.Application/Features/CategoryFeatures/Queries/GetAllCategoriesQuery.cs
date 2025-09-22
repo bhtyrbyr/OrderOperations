@@ -20,7 +20,7 @@ public class GetAllCategoriesHandler : IRequestHandler<GetAllCategoriesQuery, Li
 
     public async Task<List<CategoryViewModel>> Handle(GetAllCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await _categoryRepository.GetAllAsync();
+        var categories = await _categoryRepository.GetAllAsync(cancellationToken);
         return _mapper.Map<List<CategoryViewModel>>(categories);
     }
 }
