@@ -1,11 +1,16 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using OrderOperations.Application;
+using OrderOperations.Application.Interfaces.Notifications;
 using OrderOperations.Persistence;
 using OrderOperations.Queue;
 using OrderOperations.Security;
+using OrderOperations.Services;
+using OrderOperations.WebApi.Hubs;
 using OrderOperations.WebApi.Middlewares;
+using OrderOperations.WebApi.Notifications;
 using OrderOperations.WebApi.Services;
+using Polly.Bulkhead;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,8 +41,11 @@ builder.Services
     .AddApplicationServices()
     .AddPersistenceServices(dbConnectionString)
     .AddSecurityServices(builder.Configuration)
-    .AddQueueServices(builder.Configuration);
+    .AddQueueServices(builder.Configuration)
+    .AddOrderOperationsServices();
 
+builder.Services.AddSignalR();
+builder.Services.AddScoped<IOrderNotificationService, SignalROrderNotificationService>();
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -115,6 +123,8 @@ app.UseAuthorization();
 app.UseCustomExceptionMiddle();
 
 app.MapControllers();
+
+app.MapHub<OrderStatusHub>("/order-status-hub");
 
 app.Run();
 

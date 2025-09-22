@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using OrderOperations.Persistence.Context;
@@ -11,9 +12,11 @@ using OrderOperations.Persistence.Context;
 namespace OrderOperations.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250922112132_Db.Update_Order_Table_and_Add_OutboxMessages_Table_again")]
+    partial class DbUpdate_Order_Table_and_Add_OutboxMessages_Table_again
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -272,6 +275,7 @@ namespace OrderOperations.Persistence.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<string>("Fail")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("IdempotencyKey")

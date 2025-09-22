@@ -4,4 +4,5 @@ public class CreateOrderFromBasketViewModel
 {
     public Guid PersonId { get; set; }
     public Guid BasketId { get; set; }
+    public string? IdempotencyKey { get; set; }
 }

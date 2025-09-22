@@ -4,6 +4,6 @@ namespace OrderOperations.Application.Interfaces.QueueServices;
 
 public interface IQueueService
 {
-    void Publish<T>(T message, string queueName);
-    void Subscribe<T>(string queueName, Action<T> onMessage);
+    Task PublishAsync<T>(T message, string queueName);
+    Task SubscribeAsync<T>(string queueName, Action<T> onMessage);
 }

@@ -8,14 +8,10 @@ namespace OrderOperations.Queue.Queue;
 
 public class QueueService : IQueueService
 {
-    private IConnection connection;
-    private IChannel channel;
+    private IConnection? _connection;
+    private IChannel? _channel;
 
-    public bool connectionState = false;
-
-    public QueueService()
-    {
-    }
+    public bool ConnectionState => _connection?.IsOpen ?? false;
 
     public async Task Initialize(string userName, string userPassword, string HostName, int Port)
     {
@@ -26,14 +22,20 @@ public class QueueService : IQueueService
             UserName = userName,
             Password = userPassword
         };
-        connection = await factory.CreateConnectionAsync();
-        channel = await connection.CreateChannelAsync();
-        connectionState = connection.IsOpen;
+        _connection = await factory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync();
+
     }
-    public async void Publish<T>(T message, string queueName)
+    public async Task PublishAsync<T>(T message, string queueName)
     {
-        await channel.QueueDeclareAsync(queue: queueName, durable: false, exclusive: false, autoDelete: false,
-            arguments: null);
+        if (_channel == null)
+            throw new InvalidOperationException("RabbitMQ channel is not initialized.");
+
+        await _channel.QueueDeclareAsync(queue: queueName, 
+                                                    durable: false, 
+                                                    exclusive: false, 
+                                                    autoDelete: false,
+                                                    arguments: null);
 
         var json = JsonSerializer.Serialize(message);
         var body = Encoding.UTF8.GetBytes(json);
@@ -44,32 +46,57 @@ public class QueueService : IQueueService
         };
         properties.Persistent = true;
 
-        await channel.BasicPublishAsync(exchange: string.Empty, routingKey: queueName, mandatory: false, basicProperties: properties, body: body);
+        await _channel.BasicPublishAsync(exchange: string.Empty, 
+                                                routingKey: queueName, 
+                                                mandatory: false, 
+                                                basicProperties: properties, 
+                                                body: body);
+
         //Console.WriteLine($" [x] Sent {message}");
     }
 
-    public async void Subscribe<T>(string queueName, Action<T> onMessage)
+    public async Task SubscribeAsync<T>(string queueName, Action<T> onMessage)
     {
-        await channel.QueueDeclareAsync(queue: queueName, durable: false, exclusive: false, autoDelete: false,
-            arguments: null);
+        if (_channel is null)
+            throw new InvalidOperationException("RabbitMQ channel is not initialized.");
 
-        var consumer = new AsyncEventingBasicConsumer(channel);
-        consumer.ReceivedAsync += (model, ea) =>
+
+        await _channel.QueueDeclareAsync(queue: queueName,
+                                                    durable: false,
+                                                    exclusive: false,
+                                                    autoDelete: false,
+                                                    arguments: null);
+
+        var consumer = new AsyncEventingBasicConsumer(_channel);
+
+        consumer.ReceivedAsync += async (model, ea) =>
         {
-            var body = ea.Body.ToArray();
-            var json = Encoding.UTF8.GetString(body);
-            var message = JsonSerializer.Deserialize<T>(json);
-
-            if (message is not null)
+            try
             {
-                onMessage(message);
-            }
+                var body = ea.Body.ToArray();
+                var json = Encoding.UTF8.GetString(body);
+                var message = JsonSerializer.Deserialize<T>(json);
 
-            channel.BasicAckAsync(ea.DeliveryTag, false);
-            //Console.WriteLine($" [x] Received {message}");
-            return Task.CompletedTask;
+                if (message is not null)
+                {
+                    onMessage(message);
+                }
+
+                await _channel.BasicAckAsync(ea.DeliveryTag, multiple: false);
+            }
+            catch
+            {
+                await _channel.BasicNackAsync(ea.DeliveryTag, multiple: false, requeue: true);
+                throw;
+            }
         };
 
-        channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
+        await _channel.BasicConsumeAsync(queue: queueName, autoAck: false, consumer: consumer);
+    }
+
+    public void Dispose()
+    {
+        _channel?.Dispose();
+        _connection?.Dispose();
     }
 }
