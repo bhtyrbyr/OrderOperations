@@ -22,11 +22,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\OrderPoerations.Domain\OrderPoerations.Domain.csproj" />
+    <ProjectReference Include="..\..\Shared\OrderOperations.Contracts\OrderOperations.Contracts.csproj" />
     <ProjectReference Include="..\..\Shared\OrderOperations.CustomExceptions\OrderOperations.CustomExceptions.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Features\AuthorizationFeatures\Queries\" />
+    <Folder Include="Features\OrderFeatures\Queries\" />
   </ItemGroup>
 
 </Project>

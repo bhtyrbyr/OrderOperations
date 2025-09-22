@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace OrderOperations.Application.TokenOperations;
+namespace OrderOperations.Application.Interfaces.TokenOperations;
 
 public interface IAuthService
 {

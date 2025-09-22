@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using OrderOperations.Application.Repositories;
+using OrderOperations.Application.Interfaces.Repositories;
 using OrderOperations.CustomExceptions.Exceptions.CommonExceptions;
 
 namespace OrderOperations.Application.Features.ProductFeatures.Commands;

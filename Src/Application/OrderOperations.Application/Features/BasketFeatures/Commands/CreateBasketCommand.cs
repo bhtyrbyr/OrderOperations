@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using OrderOperations.Application.Repositories;
+using OrderOperations.Application.Interfaces.Repositories;
 using OrderPoerations.Domain.Entities;
 
 namespace OrderOperations.Application.Features.BasketFeatures.Commands;

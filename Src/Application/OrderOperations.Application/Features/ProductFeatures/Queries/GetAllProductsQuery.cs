@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using MediatR;
 using OrderOperations.Application.DTOs.ProductDTOs;
-using OrderOperations.Application.Repositories;
+using OrderOperations.Application.Interfaces.Repositories;
 
 namespace OrderOperations.Application.Features.ProductFeatures.Queries;
 

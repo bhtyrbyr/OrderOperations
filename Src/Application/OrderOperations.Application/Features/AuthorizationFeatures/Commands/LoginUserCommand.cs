@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using OrderOperations.Application.DTOs.AuthorizationDTOs;
-using OrderOperations.Application.TokenOperations;
+using OrderOperations.Application.Interfaces.TokenOperations;
 using OrderOperations.CustomExceptions.Exceptions.AuthExceptions;
 
 namespace OrderOperations.Application.Features.AuthorizationFeatures.Commands;

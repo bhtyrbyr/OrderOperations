@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using OrderOperations.Application.DTOs.BasketDTOs;
-using OrderOperations.Application.Repositories;
+using OrderOperations.Application.Interfaces.Repositories;
 using OrderOperations.CustomExceptions.Exceptions.CommonExceptions;
 
 namespace OrderOperations.Application.Features.BasketFeatures.Commands;

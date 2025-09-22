@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using OrderOperations.Application;
 using OrderOperations.Persistence;
+using OrderOperations.Queue;
 using OrderOperations.Security;
 using OrderOperations.WebApi.Middlewares;
 using OrderOperations.WebApi.Services;
@@ -34,7 +35,8 @@ if(string.IsNullOrEmpty(dbConnectionString))
 builder.Services
     .AddApplicationServices()
     .AddPersistenceServices(dbConnectionString)
-    .AddSecurityServices(builder.Configuration);
+    .AddSecurityServices(builder.Configuration)
+    .AddQueueServices(builder.Configuration);
 
 
 builder.Services.AddControllers().AddNewtonsoftJson();

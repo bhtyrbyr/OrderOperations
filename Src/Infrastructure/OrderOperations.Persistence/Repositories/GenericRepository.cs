@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OrderOperations.Application.Interfaces;
+using OrderOperations.Application.Interfaces.Repositories;
 using OrderOperations.Persistence.Context;
 
 namespace OrderOperations.Persistence.Repositories;

@@ -1,4 +1,4 @@
-﻿using OrderOperations.Application.Repositories;
+﻿using OrderOperations.Application.Interfaces.Repositories;
 using OrderOperations.Persistence.Context;
 using OrderPoerations.Domain.Entities;
 

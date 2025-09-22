@@ -17,7 +17,6 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Application\OrderOperations.Application\OrderOperations.Application.csproj" />
-		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Messaging\OrderOperations.Messaging.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Persistence\OrderOperations.Persistence.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Security\OrderOperations.Security.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Services\OrderOperations.Services.csproj" />

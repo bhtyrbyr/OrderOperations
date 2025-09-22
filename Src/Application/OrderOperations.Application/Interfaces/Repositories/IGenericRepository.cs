@@ -1,4 +1,4 @@
-﻿namespace OrderOperations.Application.Interfaces;
+﻿namespace OrderOperations.Application.Interfaces.Repositories;
 
 public interface IGenericRepository<T, TIdType>
 {

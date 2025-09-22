@@ -23,8 +23,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\Application\OrderOperations.Application\OrderOperations.Application.csproj" />
-		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Messaging\OrderOperations.Messaging.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Persistence\OrderOperations.Persistence.csproj" />
+		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Queue\OrderOperations.Queue.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Security\OrderOperations.Security.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.Services\OrderOperations.Services.csproj" />
 		<ProjectReference Include="..\..\Infrastructure\OrderOperations.SignalR\OrderOperations.SignalR.csproj" />
@@ -32,6 +32,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
 	  <Compile Update="Resources\Languages\Lang.Designer.cs">
 	    <DesignTime>True</DesignTime>
 	    <AutoGen>True</AutoGen>
@@ -40,6 +45,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
 	  <EmbeddedResource Update="Resources\Languages\Lang.resx">
 	    <Generator>ResXFileCodeGenerator</Generator>
 	    <LastGenOutput>Lang.Designer.cs</LastGenOutput>

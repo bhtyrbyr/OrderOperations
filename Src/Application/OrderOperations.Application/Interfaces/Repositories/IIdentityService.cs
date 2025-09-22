@@ -1,6 +1,6 @@
 ﻿using OrderPoerations.Domain.Entities;
 
-namespace OrderOperations.Application.Repositories;
+namespace OrderOperations.Application.Interfaces.Repositories;
 
 public interface IIdentityService
 {

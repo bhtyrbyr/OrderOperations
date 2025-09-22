@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
-using OrderOperations.Application.TokenOperations;
+using OrderOperations.Application.Interfaces.TokenOperations;
 using OrderOperations.Security.TokenOperations;
 using System.Text;
 

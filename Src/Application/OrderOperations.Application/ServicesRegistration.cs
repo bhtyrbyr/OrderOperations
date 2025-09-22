@@ -2,11 +2,6 @@
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using OrderOperations.Application.TokenOperations;
-using System.Text;
 
 namespace OrderOperations.Application;
 

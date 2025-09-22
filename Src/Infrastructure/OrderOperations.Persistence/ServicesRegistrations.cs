@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using OrderOperations.Application.Repositories;
+using OrderOperations.Application.Interfaces.Repositories;
 using OrderOperations.Persistence.Context;
 using OrderOperations.Persistence.Repositories;
 using OrderPoerations.Domain.Entities;
