@@ -152,7 +152,7 @@ public class ProductController : ControllerBase
 
     [HttpPost("{productId:guid}/add-stock")]
     [Authorize(Roles = "Admin")]
-    public async Task<IActionResult> AddStock(Guid productId, [FromBody] double quantity)
+    public async Task<IActionResult> AddStock(Guid productId, [FromBody] decimal quantity)
     {
         if (quantity <= 0)
         {

@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using OrderOperations.Application.TokenOperations;
 using OrderPoerations.Domain.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace OrderOperations.Application.TokenOperations;
+namespace OrderOperations.Security.TokenOperations;
 
 public class AuthService : IAuthService
 {
@@ -36,15 +37,13 @@ public class AuthService : IAuthService
         var roles = await _userManager.GetRolesAsync(user);
 
         var claims = new List<Claim>();
-
-        claims.Add(new Claim("_id", user.Id));
-        claims.Add(new Claim("_fullName", user.FullName));
-        claims.Add(new Claim("_userName", user.UserName));
-        claims.Add(new Claim("_email", user.Email));
+        claims.Add(new Claim(ClaimTypes.NameIdentifier, user.Id));
+        claims.Add(new Claim(ClaimTypes.Name, user.UserName));
+        claims.Add(new Claim(ClaimTypes.Email, user.Email));
 
         foreach (var role in roles)
         {
-            claims.Add(new Claim("_roles", role));
+            claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
 

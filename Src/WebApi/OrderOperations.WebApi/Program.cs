@@ -1,91 +1,118 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Localization;
 using OrderOperations.Application;
 using OrderOperations.Persistence;
+using OrderOperations.Security;
 using OrderOperations.WebApi.Middlewares;
 using OrderOperations.WebApi.Services;
 using System.Globalization;
 
-public partial class Program
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddSingleton<ILoggerService, ConsoleLogger>();
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+builder.Services.Configure<RequestLocalizationOptions>(options =>
 {
-    private static void Main(string[] args)
+    var supportedCultures = new[] { "en", "tr" }; // Add more cultures as needed
+    options.DefaultRequestCulture = new RequestCulture("tr");
+    options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
+    options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
+
+    // Set the culture based on the URL segment
+    options.RequestCultureProviders = new List<IRequestCultureProvider>
+        {
+    new AcceptLanguageHeaderRequestCultureProvider()
+        };
+});
+
+// Add services to the container.
+var dbConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
+
+if(string.IsNullOrEmpty(dbConnectionString))
+    throw new InvalidOperationException("Database connection string is not configured.");
+
+builder.Services
+    .AddApplicationServices()
+    .AddPersistenceServices(dbConnectionString)
+    .AddSecurityServices(builder.Configuration);
+
+
+builder.Services.AddControllers().AddNewtonsoftJson();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
-        var builder = WebApplication.CreateBuilder(args);
+        Name = "Authorization",
+        Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
+        BearerFormat = "JWT",
+        In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+        Description = "Enter JWT token like this: Bearer {your token}"
+    });
 
-        builder.Services.AddSingleton<ILoggerService, ConsoleLogger>();
-        builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
-        builder.Services.Configure<RequestLocalizationOptions>(options =>
+    opt.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
         {
-            var supportedCultures = new[] { "en", "tr" }; // Add more cultures as needed
-            options.DefaultRequestCulture = new RequestCulture("tr");
-            options.SupportedCultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
-            options.SupportedUICultures = supportedCultures.Select(c => new CultureInfo(c)).ToList();
-
-            // Set the culture based on the URL segment
-            options.RequestCultureProviders = new List<IRequestCultureProvider>
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
                 {
-            new AcceptLanguageHeaderRequestCultureProvider()
-                };
-        });
-
-        // Add services to the container.
-        var dbConnectionString = builder.Configuration.GetConnectionString("PostgreSql");
-
-        builder.Services
-            .AddApplicationServices(builder.Configuration)
-            .AddPersistenceServices(dbConnectionString);
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
 
 
-        builder.Services.AddControllers().AddNewtonsoftJson();
-        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+    options.SlidingExpiration = false;
+    options.Events.OnRedirectToLogin = context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return Task.CompletedTask;
+    };
+});
 
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy("AllCors", opts =>
+    {
+        opts.AllowAnyOrigin()
+        .AllowAnyHeader()
+        .AllowAnyMethod();
+    });
+});
 
-        builder.Services.ConfigureApplicationCookie(options =>
-        {
-            options.Cookie.HttpOnly = true;
-            options.ExpireTimeSpan = TimeSpan.FromMinutes(10);
-            options.SlidingExpiration = false;
-            options.Events.OnRedirectToLogin = context =>
-            {
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Task.CompletedTask;
-            };
-        });
+var app = builder.Build();
 
-        builder.Services.AddCors(opt =>
-        {
-            opt.AddPolicy("AllCors", opts =>
-            {
-                opts.AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-            });
-        });
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
 
-        var app = builder.Build();
+app.UseCors("AllCors");
 
-        // Configure the HTTP request pipeline.
-        //if (app.Environment.IsDevelopment())
-        //{
-        app.UseSwagger();
-        app.UseSwaggerUI();
-        //}
+app.UseRequestLocalization();
 
-        app.UseCors("AllCors");
+app.UseHttpsRedirection();
 
-        app.UseRequestLocalization();
+app.UseAuthentication();
 
-        app.UseHttpsRedirection();
+app.UseAuthorization();
 
-        app.UseAuthentication();
+app.UseCustomExceptionMiddle();
 
-        app.UseAuthorization();
+app.MapControllers();
 
-        app.UseCustomExceptionMiddle();
+app.Run();
 
-        app.MapControllers();
-
-        app.Run();
-    }
-}

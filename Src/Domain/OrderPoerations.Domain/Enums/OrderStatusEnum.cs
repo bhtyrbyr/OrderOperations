@@ -2,7 +2,9 @@
 
 public enum OrderStatusEnum
 {
+    Created,
     Pending,
-    Processed,
-    Failed
+    Paid,
+    Failed,
+    Completed
 }
